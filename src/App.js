@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import AddColorForm from "./add-color";
+import "./App.css";
+import data from "./color-data.json";
+import ColorList from "./colorList.js";
+import { v4 as uuid } from "uuid";
 
 function App() {
+  var [colors, setColors] = useState(data);
+
+  const onRemove = (id) => {
+    let filtered = colors.filter((c) => c.id !== id);
+    setColors(filtered);
+  };
+
+  const onRate = (colorKey, rating) => {
+    let updatedRatings = colors.map((c) =>
+      c.id !== colorKey ? c : { ...c, rating }
+    );
+    setColors(updatedRatings);
+  };
+
+  const addColor = (title, color) => {
+    let c = {};
+    c.id = uuid();
+    c.title = title;
+    c.color = color;
+    c.rating = 0;
+    console.log({ title, color, c });
+    setColors([...colors, c]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ColorList colors={colors} onRate={onRate} onRemove={onRemove} />
+
+      <AddColorForm addColor={addColor} />
+    </>
   );
 }
 
