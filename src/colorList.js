@@ -1,10 +1,8 @@
 import Color from "./color";
+import { useColors } from "./color-provider";
 
-export default function ColorList({
-  colors,
-  onRemove = (f) => f,
-  onRate = (f) => f,
-}) {
+export default function ColorList() {
+  const { colors, onRemove, onRate } = useColors();
   return (
     <>
       {colors.map((color, i) => (

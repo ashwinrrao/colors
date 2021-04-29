@@ -1,22 +1,24 @@
 import { useState } from "react";
+import { useColors } from "./color-provider";
 
-// function useInput(intialValue) {
-//   let [value, setValue] = useState(intialValue);
-//   return [
-//     { value, onChange: (e) => setValue(e.target.value) },
-//     () => setValue(intialValue),
-//   ];
-// }
+export const useInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  return [
+    { value, onChange: (e) => setValue(e.target.value) },
+    () => setValue(initialValue),
+  ];
+};
 
-export default function AddColorForm({ addColor = (f) => f }) {
-  var [title, setTitle] = useState("");
-  var [color, setColor] = useState("#000000");
+export default function AddColorForm() {
+  const [titleProps, resetTitle] = useInput("");
+  const [colorProps, resetColor] = useInput("#000000");
+  const { addColor } = useColors();
 
   var onSubmit = (e) => {
     e.preventDefault();
-    addColor(title, color);
-    setTitle("");
-    setColor("#000000");
+    addColor(colorProps.value, titleProps.value);
+    resetTitle("");
+    resetColor("#000000");
   };
 
   return (
@@ -26,13 +28,13 @@ export default function AddColorForm({ addColor = (f) => f }) {
           type="text"
           name="title"
           placeholder="color title"
-          onChange={(e) => setTitle(e.target.value)}
+          {...titleProps}
         />
         <input
           type="color"
           name="color-picker"
           placeholder="color"
-          onChange={(e) => setColor(e.target.value)}
+          {...colorProps}
         />
         <button>ADD</button>
       </form>
